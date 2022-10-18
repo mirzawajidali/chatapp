@@ -25,4 +25,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::middleware('auth')->group(function(){
     Route::get('users',[ChatController::class, 'users']);
+    Route::post('/get/conversation',[ChatController::class, 'getConversation']);
 });
