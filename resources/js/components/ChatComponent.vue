@@ -27,46 +27,7 @@
                                             </div>
                                         </div>
                                         </a>
-                                        <a href="" class="user-link">
-                                            <div class="card user-card">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-start align-items-center">
-                                                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" class="user-img" width="10%" alt="" >
-                                                        <h4>Wajid Ali</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </a>
-                                        <a href="" class="user-link">
-                                            <div class="card user-card">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-start align-items-center">
-                                                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" class="user-img" width="10%" alt="" >
-                                                        <h4>Wajid Ali</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </a>
-                                        <a href="" class="user-link">
-                                            <div class="card user-card">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-start align-items-center">
-                                                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" class="user-img" width="10%" alt="" >
-                                                        <h4>Wajid Ali</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </a>
-                                        <a href="" class="user-link">
-                                            <div class="card user-card">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-start align-items-center">
-                                                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80" class="user-img" width="10%" alt="" >
-                                                        <h4>Wajid Ali</h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        </a>
+
                                     </div>
                                 </div>
                             </div>
@@ -100,23 +61,48 @@
 </template>
 
 <script>
+import axios from 'axios';
+
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        },
         data(){
             return {
+                userData: {
+                    users: []
+                },
                 message: null,
+                msg:null,
                 chat: {
-                    messages: []
-                }
+                    messages: [],
+                },
             }
         },
         methods: {
             sendMessage(){
                 this.chat.messages.push(this.message);
                 this.message = '';
+            },
+            getUsers(){
+                axios.get('/users').then(function (response) {
+
+                // this.userData.users.push(response.data.users);
+
+                response.data.users.forEach(element => {
+
+                });
+            }).then(function(error){
+                console.log(error);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
             }
+        },
+        mounted(){
+
+            this.getUsers();
+        },
+        created(){
+            console.log(this.demo);
         }
     }
 </script>
