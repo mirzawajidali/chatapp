@@ -72,7 +72,8 @@ export default {
     data() {
         return {
             users: {
-                all: []
+                all: [],
+                dynamic_id: null
             },
             message: null,
             chat: {
@@ -82,7 +83,14 @@ export default {
     },
     methods: {
         sendMessage() {
-            this.chat.messages.push(this.message);
+            // this.chat.messages.push(this.message);
+            // var that = this;
+            axios.post('/send/message', { message: this.message, user_id: this.dynamic_id }).then(function (response) {
+                // console.log(response);
+                // that.pusherConection();
+            }).catch(function (response) {
+                console.log(response);
+            });
             this.message = '';
         },
         getUsers(user) {
@@ -102,19 +110,35 @@ export default {
             })
                 .then(function (response) {
                     that.chat.messages = [];
-                    if(response.data.message){
+                    if (response.data.message) {
                         response.data.message.forEach(element => {
-                        that.chat.messages.push(element.message);
+                            that.chat.messages.push(element.message);
                         });
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+            that.dynamic_id = id;
+        },
+
+        pusherConection(to) {
+            var pusher = new Pusher('6b5c625fde26fa276545', {
+                cluster: 'ap2'
+            });
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function (data) {
+                console.log('pusher');
+                console.log(data);
+                console.log('pusher');
+                to.messages.push(data.message);
+
+            });
         }
     },
     mounted() {
         this.getUsers(this.users.all);
+        this.pusherConection(this.chat);
     },
     created() {
 
