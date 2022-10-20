@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Log;
 
 class ChatEvent implements ShouldBroadcast
 {
@@ -22,10 +23,11 @@ class ChatEvent implements ShouldBroadcast
     public $message;
     public $user;
 
-    public function __construct($user, $message)
+    public function __construct($message, $user_id)
     {
+        Log::info("Event trigger");
         $this->message = $message;
-        $this->user    = $user;
+        $this->user    = $user_id;
     }
 
     /**

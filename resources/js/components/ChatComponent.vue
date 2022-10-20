@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -19,11 +19,11 @@
                                     <div class="col-md-12">
                                         <a href="javascript:void(0)" @click="getConversation(user.id)" class="user-link"
                                             v-for="user in users.all">
-                                            <div class="card user-card active">
+                                            <div class="card user-card">
                                                 <div class="card-body">
                                                     <div class="d-flex justify-content-start align-items-center">
-                                                        <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlcnxlbnwwfHwwfHw%3D&w=1000&q=80"
-                                                            class="user-img" width="10%" alt="">
+                                                        <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"
+                                                            class="user-img" alt="">
                                                         <h4>{{ user.name }}</h4>
                                                     </div>
                                                 </div>
@@ -35,11 +35,16 @@
                             </div>
                             <div class="col-md-8 chat-area">
                                 <div class="card mt-3 message-card" v-for="messages in chat.messages">
-                                    <div class="card-body">
-                                        <h5>{{ messages }}</h5>
-                                        <span class="time"><i class="fas fa-check"></i> 2 min ago <i
-                                                class="far fa-clock"></i></span>
-                                    </div>
+                                    <!-- <div class="card-body"> -->
+                                        <!-- <h5>{{ messages }}</h5> -->
+                                        <div class="message-text">
+                                            <p>{{ messages }}</p>
+                                            <!-- <p class="time"><i class="fas fa-check"></i> 2 min ago <i
+                                                class="far fa-clock"></i></p> -->
+                                        </div>
+
+
+                                    <!-- </div> -->
                                 </div>
                                 <!-- <div class="card mt-3 message-card-comming">
                                     <div class="card-body">
@@ -72,7 +77,9 @@ export default {
     data() {
         return {
             users: {
-                all: []
+                all: [],
+                dynamic_id: null,
+                active: [],
             },
             message: null,
             chat: {
@@ -82,7 +89,12 @@ export default {
     },
     methods: {
         sendMessage() {
-            this.chat.messages.push(this.message);
+            // this.chat.messages.push(this.message);
+            // var that = this;
+            axios.post('/send/message', { message: this.message, user_id: this.dynamic_id }).then(function (response) {
+            }).catch(function (response) {
+                console.log(response);
+            });
             this.message = '';
         },
         getUsers(user) {
@@ -102,29 +114,60 @@ export default {
             })
                 .then(function (response) {
                     that.chat.messages = [];
-                    if(response.data.message){
+                    if (response.data.message) {
                         response.data.message.forEach(element => {
-                        that.chat.messages.push(element.message);
+                            that.chat.messages.push(element.message);
                         });
                     }
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+            that.dynamic_id = id;
+        },
+
+        getActiveUser(user){
+            axios.post('/get/active/user',{}).then(function(response){
+                user.active.push(response.data);
+            }).catch(function(response){
+                console.log(response);
+            });
+        },
+
+        pusherConection(to) {
+            var pusher = new Pusher('6b5c625fde26fa276545', {
+                cluster: 'ap2'
+            });
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function (data) {
+                console.log('pusher');
+                console.log(data);
+                console.log('pusher');
+                to.messages.push(data.message);
+
+            });
         }
     },
     mounted() {
         this.getUsers(this.users.all);
+        this.pusherConection(this.chat);
+        this.getActiveUser(this.users);
+        // this.$toast.show(`Hey! I'm here`);
+        this.$toast.success('Welcome Back!');
+
     },
     created() {
-
+        console.log(this.users.active);
     }
 }
 </script>
 <style scoped>
 .header-card {
-    background-color: #85fdc7;
+    background-color: #90e0ef;
     color: #fff;
+}
+.container{
+    height: 70vh;
 }
 
 .card {
@@ -133,7 +176,7 @@ export default {
 }
 
 .chat-area {
-    background-color: rgb(250, 250, 250);
+    background-color: rgb(255, 255, 255);
     height: 78vh;
     overflow-y: scroll;
 }
@@ -153,27 +196,39 @@ export default {
 
 .user-img {
     border-radius: 50px;
+    width: 50px;
 }
 
 #usermenu {
-    /* width: 78vh; */
+    height: 78vh;
     overflow-y: scroll;
 }
 
 .message-card {
-    background-color: #35495e;
+    background-color: #90e0ef;
     color: #fff;
-    border-radius: 15px;
+    border-radius: 50px;
+    justify-content: center;
+    max-width: 350px;
+    padding: 3px;
+}
+.message-text{
+    margin-left: 25px;
+    margin-top: 12px;
+    font-size: 17px;
 }
 
 .message-card-comming {
     background-color: #fff;
     color: #35495e;
     border-radius: 15px;
+    margin: auto;
+    padding: 1px;
+    width: 50px;
 }
 
 .time {
-    font-size: 12px;
+    font-size: 10px;
 }
 
 .form-control {
