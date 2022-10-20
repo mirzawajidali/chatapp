@@ -21,13 +21,12 @@ class ChatEvent implements ShouldBroadcast
      * @return void
      */
     public $message;
-    public $user;
+    public $user_id;
 
     public function __construct($message, $user_id)
     {
-        Log::info("Event trigger");
         $this->message = $message;
-        $this->user    = $user_id;
+        $this->user_id    = $user_id;
     }
 
     /**

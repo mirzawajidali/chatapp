@@ -22,6 +22,8 @@
         "pusher-js": "^7.4.0",
         "stylus": "^0.59.0",
         "stylus-loader": "^3.0.2",
-        "vue-loader": "^17.0.0"
+        "vue-loader": "^17.0.0",
+        "vue-simple-spinner": "^1.2.10",
+        "vue-sweetalert2": "^5.0.5"
     }
 }
