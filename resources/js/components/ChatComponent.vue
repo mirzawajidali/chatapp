@@ -156,7 +156,7 @@ export default {
 }
 
 #usermenu {
-    /* width: 83vh; */
+    /* width: 78vh; */
     overflow-y: scroll;
 }
 
