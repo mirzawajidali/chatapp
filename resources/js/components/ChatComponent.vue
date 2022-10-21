@@ -1,5 +1,6 @@
 <template>
     <div class="container">
+        <modal-component></modal-component>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -9,7 +10,7 @@
                                 <h1><i class="fas fa-comment"></i> Messenger</h1>
                             </div>
                             <div>
-                                <a href="javascript:void(0)" class="profile"><i class="fas fa-user"></i></a>
+                                <a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#exampleModal" class="profile"><i class="fas fa-user"></i></a>
                             </div>
                         </div>
                     </div>
@@ -61,7 +62,8 @@
                                     </div>
                                 </div> -->
                                 <div class="pt-5"></div>
-                                <div v-for="messages in users.messages" @click="deleteMessage">
+
+                                    <div v-for="messages in users.messages" @click="deleteMessage">
                                     <div class="card mt-3 message-card">
                                         <!-- <div class="card-body"> -->
                                         <!-- <h5>{{ messages }}</h5> -->
@@ -74,7 +76,9 @@
                                         <p class="time"><i class="fas fa-check"></i> 2 min ago <i
                                                 class="far fa-clock"></i></p>
                                     </div>
+
                                 </div>
+
 
                                 <!-- <div class="card mt-3 message-card-comming">
                                     <div class="card-body">
@@ -104,9 +108,6 @@
 import axios from 'axios';
 import Spinner from 'vue-simple-spinner';
 export default {
-    components: {
-        Spinner
-    },
     data() {
         return {
             users: {
@@ -141,6 +142,7 @@ export default {
         },
         getConversation(id) {
             let that = this;
+            that.accessable = true;
             axios.post('/get/conversation', {
                 id: id,
             })
@@ -191,6 +193,7 @@ export default {
                 console.log(to.dynamic_id);
                 console.log(data.user_id);
                 if(to.dynamic_id = data.user_id){
+                    to.accessable = true;
                     console.log('CONDITION TRUE');
                     to.messages.push(data.message);
                 }else{
